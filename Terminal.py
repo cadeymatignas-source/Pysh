@@ -61,6 +61,14 @@ while True:
 			elif command.lower() == "reset prompt":
 				change = False
 
+			elif command.lower() == "help":
+				subprocess.run("help", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				yes = input("Would you like more? (y/N)")
+				match yes.lower():
+					case "y":
+						print("Help: explains every command,\nCoolguy38 is sigma: responds, \nreset prompt: Resets the prompt")
+					case "N":
+						continue
 			else:
 				try:
 					subprocess.run(command, shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
