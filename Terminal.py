@@ -59,6 +59,4 @@ while True:
 				except Exception as e:
 					print(f"Error {e} with type {type(e)}")
 	except KeyboardInterrupt:
-		print("Exiting...")
-		sleep(0.5)
-		sys.exit()
+		continue
