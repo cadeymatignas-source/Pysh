@@ -4,10 +4,12 @@ import sys
 from time import sleep
 
 print("Welcome to the python terminal!")
-
+change = False
 while True:
 	try:
-		prompt = f"PT -> {os.getcwd()}> "
+		if not change:
+			temp = f"PT -> {os.getcwd()}> "
+		prompt = temp
 		cmd = input(prompt).strip()
 		commands = [c.strip() for c in cmd.split("&&")]
 
@@ -52,6 +54,13 @@ while True:
 
 				except Exception as e:
 					print(f"{type(e)} happened with message {e}.")
+
+			elif command.lower().startswith("prompt "):
+				temp = command[7:].strip()
+				change = True
+			elif command.lower() == "reset prompt":
+				change = False
+
 			else:
 				try:
 					subprocess.run(command, shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
