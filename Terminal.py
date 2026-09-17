@@ -43,7 +43,7 @@ while True:
 							exec("\n".join(blockly))
 						except Exception as e:
 							print(f"{type(e)} happened with message {e}.")
-			elif command.lower() == "cd":
+			elif command.lower() == "cd" or command.lower() == "pwd":
 				print(os.getcwd())
 
 			elif command.lower().startswith("cd "):
