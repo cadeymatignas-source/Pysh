@@ -58,7 +58,7 @@ while True:
 			elif command.lower().startswith("prompt "):
 				temp = command[7:].strip()
 				change = True
-			elif command.lower() == "reset prompt":
+			elif command.lower() == "reset prompt" or command.lower() == "prompt":
 				change = False
 
 			elif command.lower() == "help":
@@ -66,7 +66,9 @@ while True:
 				yes = input("Would you like more? (y/N)")
 				match yes.lower():
 					case "y":
-						print("Help: explains every command,\nCoolguy38 is sigma: responds, \nreset prompt: Resets the prompt")
+						print(
+							"Help: explains every command,\nCoolguy38 is sigma: responds, \nreset prompt: Resets the prompt\n prompt: Also resets the prompt\npwd: prints the current working directory"
+						)
 					case "N":
 						continue
 			else:
