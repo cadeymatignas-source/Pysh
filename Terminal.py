@@ -3,7 +3,9 @@ import subprocess
 import sys
 from time import sleep
 
-print("Welcome to the python terminal!")
+from termcolor import colored
+
+print(colored("Welcome to the python terminal!", "blue"))
 change = False
 while True:
 	try:
@@ -53,7 +55,7 @@ while True:
 					os.chdir(path)
 
 				except Exception as e:
-					print(f"{type(e)} happened with message {e}.")
+					print(colored(f"{type(e)} happened with message {e}.", "red"))
 
 			elif command.lower().startswith("prompt "):
 				temp = command[7:].strip()
@@ -76,6 +78,6 @@ while True:
 					subprocess.run(command, shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 				except Exception as e:
-					print(f"Error {e} with type {type(e)}")
+					print(colored(f"Error {e} with type {type(e)}", "red"))
 	except KeyboardInterrupt:
 		continue
