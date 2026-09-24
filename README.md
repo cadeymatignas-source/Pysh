@@ -20,3 +20,4 @@ It has:
 - pwd: Prints the current working directory
 - pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
 - pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
+- pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)

@@ -1,11 +1,25 @@
 import os
 import subprocess
 import sys
+import tomllib
+from pathlib import Path
 from time import sleep
 
 from termcolor import colored
 
-print(colored("Welcome to the python terminal!", "blue"))
+config_path = Path.home() / ".pysh" / "config.toml"
+
+if not config_path.exists():
+	print("Hello new user. Generating config.toml")
+
+	config_path.parent.mkdir(parents=True, exist_ok=True)
+
+	config_path.write_text('package_manager = "winget"\nUser = "root"\n')
+
+with config_path.open("rb") as f:
+	config = tomllib.load(f)
+
+print(colored(f"Welcome to the python terminal, {config['User']}!", "blue"))
 change = False
 while True:
 	try:
@@ -75,7 +89,8 @@ while True:
 							- prompt: Also resets the prompt
 							- pwd: Prints the current working directory
 							- pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
-							- pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build"""
+							- pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
+							- pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)"""
 						)
 					case "n":
 						continue
@@ -105,6 +120,9 @@ while True:
 							subprocess.run("pip install build twine", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 						case "n":
 							print("Ok")
+			elif command.lower().startswith("pack get "):
+				getd = command[9:].strip()
+				subprocess.run(f"{config['package_manager']} {getd}", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 			else:
 				try:
