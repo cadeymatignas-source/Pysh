@@ -69,11 +69,13 @@ while True:
 				match yes.lower():
 					case "y":
 						print(
-							"""Help: explains every command
-							Coolguy38 is sigma: responds
-							reset prompt: Resets the prompt
-							prompt: Also resets the prompt
-							pwd: Prints the current working directory"""
+							"""- Help: explains every command
+							- Coolguy38 is sigma: responds
+							- reset prompt: Resets the prompt
+							- prompt: Also resets the prompt
+							- pwd: Prints the current working directory
+							- pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
+							- pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build"""
 						)
 					case "n":
 						continue
