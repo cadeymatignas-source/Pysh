@@ -1,4 +1,4 @@
-# Python Terminal
+# Pysh (PYthon SHell)
 
 ## This is a terminal shell I made with python
 
@@ -10,7 +10,7 @@ It has:
 - A custom python REPL;
 - And custom commands
 
-## All custom commands
+## Every custom command
 
 - Help: explains every command
 - prompt (text): Changes the prompt to the text after it
