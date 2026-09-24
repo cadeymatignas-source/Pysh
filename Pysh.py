@@ -20,7 +20,7 @@ while True:
 				print("Goodbye!")
 				sleep(0.5)
 				sys.exit()
-			elif command.lower() == "Coolguy38 is sigma":
+			elif command.lower() == "coolguy38 is sigma":
 				print("Yes, im sigma B)")
 			elif command == "":
 				print("Empty command")
@@ -69,10 +69,41 @@ while True:
 				match yes.lower():
 					case "y":
 						print(
-							"Help: explains every command,\nCoolguy38 is sigma: responds, \nreset prompt: Resets the prompt\n prompt: Also resets the prompt\npwd: prints the current working directory"
+							"""Help: explains every command
+							Coolguy38 is sigma: responds
+							reset prompt: Resets the prompt
+							prompt: Also resets the prompt
+							pwd: Prints the current working directory"""
 						)
-					case "N":
+					case "n":
 						continue
+			elif command.lower().startswith("pyexe "):
+				pyn = command[6:].strip()
+				pynn = subprocess.run(f"pyinstaller --onefile {pyn}", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				if pynn.returncode != 0:
+					down = input("Oh no! Pyinstaller failed. Download? (y/N)")
+					match down.lower():
+						case "y":
+							subprocess.run("pip install pyinstaller", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+						case "n":
+							print("Ok")
+			elif command.lower().startswith("pypub "):
+				pyb = command[6:].strip()
+				pybb = subprocess.run(
+					f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
+					shell=True,
+					stdin=sys.stdin,
+					stdout=sys.stdout,
+					stderr=sys.stderr,
+				)
+				if pybb.returncode != 0:
+					downl = input("Oh no! Something failed! Download build and twine? (y/N)")
+					match downl.lower():
+						case "y":
+							subprocess.run("pip install build twine", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+						case "n":
+							print("Ok")
+
 			else:
 				try:
 					subprocess.run(command, shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
