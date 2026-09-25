@@ -14,7 +14,11 @@ if not config_path.exists():
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
-	config_path.write_text('package_manager = "winget"\nUser = "root"\n')
+	config_path.write_text("""package_manager = "winget"
+User = "root"
+shell = "cmd.exe"
+arg = "/c"
+""")
 
 with config_path.open("rb") as f:
 	config = tomllib.load(f)
@@ -24,7 +28,7 @@ change = False
 while True:
 	try:
 		if not change:
-			temp = f"PT -> {os.getcwd()}> "
+			temp = colored(f"PT -> {os.getcwd()}> ", "magenta")
 		prompt = temp
 		cmd = input(prompt).strip()
 		commands = [c.strip() for c in cmd.split("&&")]
@@ -45,7 +49,7 @@ while True:
 					if pyi.lower() == "exit" or pyi.lower() == "exit()":
 						break
 					elif pyi.lower() == "cls" or pyi.lower() == "clear":
-						subprocess.run("cls", shell=True)
+						subprocess.run([config["shell"], config["arg"], "cls"], shell=True)
 					else:
 						try:
 							exec(pyi)
@@ -78,7 +82,7 @@ while True:
 				change = False
 
 			elif command.lower() == "help":
-				subprocess.run("help", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				subprocess.run([config["shell"], config["arg"], "help"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 				yes = input("Would you like more? (y/N)")
 				match yes.lower():
 					case "y":
@@ -96,19 +100,30 @@ while True:
 						continue
 			elif command.lower().startswith("pyexe "):
 				pyn = command[6:].strip()
-				pynn = subprocess.run(f"pyinstaller --onefile {pyn}", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				pynn = subprocess.run(
+					[config["shell"], config["arg"], f"pyinstaller --onefile {pyn}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
+				)
 				if pynn.returncode != 0:
 					down = input("Oh no! Pyinstaller failed. Download? (y/N)")
 					match down.lower():
 						case "y":
-							subprocess.run("pip install pyinstaller", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+							subprocess.run(
+								[config["shell"], config["arg"], "pip install pyinstaller"],
+								shell=True,
+								stdin=sys.stdin,
+								stdout=sys.stdout,
+								stderr=sys.stderr,
+							)
 						case "n":
 							print("Ok")
 			elif command.lower().startswith("pypub "):
 				pyb = command[6:].strip()
 				pybb = subprocess.run(
-					f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
-					shell=True,
+					[
+						config["shell"],
+						config["arg"],
+						f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
+					],
 					stdin=sys.stdin,
 					stdout=sys.stdout,
 					stderr=sys.stderr,
@@ -117,16 +132,24 @@ while True:
 					downl = input("Oh no! Something failed! Download build and twine? (y/N)")
 					match downl.lower():
 						case "y":
-							subprocess.run("pip install build twine", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+							subprocess.run(
+								[config["shell"], config["arg"], "pip install build twine"],
+								shell=True,
+								stdin=sys.stdin,
+								stdout=sys.stdout,
+								stderr=sys.stderr,
+							)
 						case "n":
 							print("Ok")
 			elif command.lower().startswith("pack get "):
 				getd = command[9:].strip()
-				subprocess.run(f"{config['package_manager']} {getd}", shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				subprocess.run(
+					[config["shell"], config["arg"], f"{config['package_manager']} {getd}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
+				)
 
 			else:
 				try:
-					subprocess.run(command, shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+					subprocess.run([config["shell"], config["arg"], command], shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 				except Exception as e:
 					print(colored(f"Error {e} with type {type(e)}", "red"))
