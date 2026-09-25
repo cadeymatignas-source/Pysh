@@ -67,7 +67,7 @@ while True:
 				print(os.getcwd())
 
 			elif command.lower().startswith("cd "):
-				path = command[3:].strip()
+				path = command[3:].strip().strip("'\"")
 
 				try:
 					os.chdir(path)
