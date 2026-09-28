@@ -8,6 +8,7 @@ from time import sleep
 from termcolor import colored
 
 config_path = Path.home() / ".pysh" / "config.toml"
+config_py_path = Path.home() / ".pysh" / "config.py"
 
 if not config_path.exists():
 	print("Hello new user. Generating config.toml")
@@ -20,8 +21,17 @@ shell = "cmd.exe"
 arg = "/c"
 """)
 
+if not config_py_path.exists():
+	print("Generating config.py")
+
+	config_py_path.parent.mkdir(parents=True, exist_ok=True)
+
+	config_py_path.write_text("# Put code here, to run once before the main code.")
+
 with config_path.open("rb") as f:
 	config = tomllib.load(f)
+
+exec(config_py_path.read_text())
 
 print(colored(f"Welcome to the python terminal, {config['User']}!", "blue"))
 change = False
@@ -50,6 +60,8 @@ while True:
 						break
 					elif pyi.lower() == "cls" or pyi.lower() == "clear":
 						subprocess.run([config["shell"], config["arg"], "cls"], shell=True)
+					elif pyi.lower().startswith("pip "):
+						subprocess.run([config["shell"], config["arg"], pyi], shell=True)
 					else:
 						try:
 							exec(pyi)
@@ -148,6 +160,12 @@ while True:
 				)
 			elif command.lower() == "whoami":
 				print(f"You are {config['User']}")
+
+			elif command.lower().endswith(")"):
+				try:
+					exec(command)
+				except NameError:
+					print(colored("Command doesn't exist", "red"))
 
 			else:
 				try:
