@@ -1,11 +1,13 @@
-import os
 import subprocess
 import sys
 import tomllib
+from os import chdir, name
 from pathlib import Path
 from time import sleep
 
 from termcolor import colored
+
+platform = name
 
 config_path = Path.home() / ".pysh" / "config.toml"
 config_py_path = Path.home() / ".pysh" / "config.py"
@@ -19,6 +21,7 @@ if not config_path.exists():
 User = "root"
 shell = "cmd.exe"
 arg = "/c"
+prompt_color = "magneta"
 """)
 
 if not config_py_path.exists():
@@ -38,7 +41,7 @@ change = False
 while True:
 	try:
 		if not change:
-			temp = colored(f"PT -> {os.getcwd()}> ", "magenta")
+			temp = colored(f"PT -> {Path.cwd()}> ", config["prompt_color"])
 		prompt = temp
 		cmd = input(prompt).strip()
 		commands = [c.strip() for c in cmd.split("&&")]
@@ -52,14 +55,17 @@ while True:
 				print("Yes, im sigma B)")
 			elif command == "":
 				print("Empty command")
-			elif command.lower() == "python":
+			elif command.lower() == "pythoner":
 				print(sys.version)
 				while True:
 					pyi = input(">")
 					if pyi.lower() == "exit" or pyi.lower() == "exit()":
 						break
 					elif pyi.lower() == "cls" or pyi.lower() == "clear":
-						subprocess.run([config["shell"], config["arg"], "cls"], shell=True)
+						if platform.lower() == "nt":
+							subprocess.run([config["shell"], config["arg"], "cls"], shell=True)
+						else:
+							subprocess.run([config["shell"], config["arg"], "clear"], shell=True)
 					elif pyi.lower().startswith("pip "):
 						subprocess.run([config["shell"], config["arg"], pyi], shell=True)
 					else:
@@ -76,13 +82,13 @@ while True:
 						except Exception as e:
 							print(f"{type(e)} happened with message {e}.")
 			elif command.lower() == "cd" or command.lower() == "pwd":
-				print(os.getcwd())
+				print(Path.cwd())
 
 			elif command.lower().startswith("cd "):
 				path = command[3:].strip().strip("'\"")
 
 				try:
-					os.chdir(path)
+					chdir(path)
 
 				except Exception as e:
 					print(colored(f"{type(e)} happened with message {e}.", "red"))
@@ -106,7 +112,8 @@ while True:
 - pwd: Prints the current working directory
 - pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
 - pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
-- pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)"""
+- pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)
+- pythoner: this is the custom python REPL"""
 						)
 					case "n":
 						continue
@@ -165,8 +172,9 @@ while True:
 				try:
 					exec(command)
 				except NameError:
-					print(colored("Command doesn't exist", "red"))
-
+					print(colored(f"Command {command} doesnt exist", "red"))
+			elif command.lower() == "os":
+				print("Windows" if platform == "nt" else "POSIX - like MacOS or Linux")
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
