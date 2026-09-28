@@ -13,11 +13,15 @@ It has:
 ## Every custom command
 
 - help: explains every command
-- prompt (text): Changes the prompt to the text after it
-- prompt: Resets prompt
-- reset prompt: Also resets prompt
-- Coolguy38 is sigma: It responds
-- pwd: Prints the current working directory
-- pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
-- pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
+- prompt (text): changes the prompt to the text after it
+- prompt: resets prompt
+- reset prompt: also resets prompt
+- Coolguy38 is sigma: it responds
+- pwd: prints the current working directory
+- os: prints the current OS
+- cd: also prints the current working directory
+- pyexe: runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
+- pypub: builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
 - pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)
+
+- pythoner: this is the custom python repl, now put into a seperate keyword

@@ -17,12 +17,21 @@ if not config_path.exists():
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
-	config_path.write_text("""package_manager = "winget"
+	config_path.write_text(
+		"""package_manager = "winget"
 User = "root"
 shell = "cmd.exe"
 arg = "/c"
-prompt_color = "magneta"
-""")
+prompt_color = "magenta"
+"""
+		if platform == "nt"
+		else """package_manager = "sudo apt"
+User = "root"
+shell = "bash"
+arg = "-c"
+prompt_color = "magenta"
+"""
+	)
 
 if not config_py_path.exists():
 	print("Generating config.py")
@@ -63,11 +72,11 @@ while True:
 						break
 					elif pyi.lower() == "cls" or pyi.lower() == "clear":
 						if platform.lower() == "nt":
-							subprocess.run([config["shell"], config["arg"], "cls"], shell=True)
+							subprocess.run([config["shell"], config["arg"], "cls"])
 						else:
-							subprocess.run([config["shell"], config["arg"], "clear"], shell=True)
+							subprocess.run([config["shell"], config["arg"], "clear"])
 					elif pyi.lower().startswith("pip "):
-						subprocess.run([config["shell"], config["arg"], pyi], shell=True)
+						subprocess.run([config["shell"], config["arg"], pyi])
 					else:
 						try:
 							exec(pyi)
@@ -128,7 +137,6 @@ while True:
 						case "y":
 							subprocess.run(
 								[config["shell"], config["arg"], "pip install pyinstaller"],
-								shell=True,
 								stdin=sys.stdin,
 								stdout=sys.stdout,
 								stderr=sys.stderr,
@@ -153,7 +161,6 @@ while True:
 						case "y":
 							subprocess.run(
 								[config["shell"], config["arg"], "pip install build twine"],
-								shell=True,
 								stdin=sys.stdin,
 								stdout=sys.stdout,
 								stderr=sys.stderr,
@@ -177,7 +184,7 @@ while True:
 				print("Windows" if platform == "nt" else "POSIX - like MacOS or Linux")
 			else:
 				try:
-					subprocess.run([config["shell"], config["arg"], command], shell=True, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 				except Exception as e:
 					print(colored(f"Error {e} with type {type(e)}", "red"))
