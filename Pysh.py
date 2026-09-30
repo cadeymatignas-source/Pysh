@@ -193,9 +193,11 @@ while True:
 			elif command.lower().startswith("view "):
 				viewed = command[5:].strip()
 
-				subprocess.run([config["shell"], config["arg"], f"pygmentize {viewed}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
-				if pynn.returncode != 0:
-					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?"))
+				viewer = subprocess.run(
+					[config["shell"], config["arg"], f"pygmentize {viewed}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
+				)
+				if viewer.returncode != 0:
+					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
