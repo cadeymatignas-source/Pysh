@@ -5,6 +5,9 @@ from os import chdir, name
 from pathlib import Path
 from time import sleep
 
+from prompt_toolkit import prompt
+from prompt_toolkit.lexers import PygmentsLexer
+from pygments.lexers import PythonLexer
 from termcolor import colored
 
 platform = name
@@ -51,8 +54,8 @@ while True:
 	try:
 		if not change:
 			temp = colored(f"PT -> {Path.cwd()}> ", config["prompt_color"])
-		prompt = temp
-		cmd = input(prompt).strip()
+		prompter = temp
+		cmd = input(prompter).strip()
 		commands = [c.strip() for c in cmd.split("&&")]
 
 		for command in commands:
@@ -67,10 +70,11 @@ while True:
 			elif command.lower() == "pythoner":
 				print(sys.version)
 				while True:
-					pyi = input(">")
-					if pyi.lower() == "exit" or pyi.lower() == "exit()":
+					pyi = prompt(">", lexer=PygmentsLexer(PythonLexer))
+
+					if pyi.lower() in ("exit", "exit()"):
 						break
-					elif pyi.lower() == "cls" or pyi.lower() == "clear":
+					elif pyi.lower() in ("cls", "clear"):
 						if platform.lower() == "nt":
 							subprocess.run([config["shell"], config["arg"], "cls"])
 						else:
@@ -83,13 +87,14 @@ while True:
 						except IndentationError:
 							blockly = [pyi]
 							while True:
-								extra = input("->")
+								extra = prompt("->", lexer=PygmentsLexer(PythonLexer))
 								if extra == "":
 									break
 								blockly.append(extra)
 							exec("\n".join(blockly))
 						except Exception as e:
 							print(f"{type(e)} happened with message {e}.")
+
 			elif command.lower() == "cd" or command.lower() == "pwd":
 				print(Path.cwd())
 
