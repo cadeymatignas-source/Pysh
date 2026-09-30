@@ -95,7 +95,7 @@ while True:
 						except Exception as e:
 							print(f"{type(e)} happened with message {e}.")
 
-			elif command.lower() == "cd" or command.lower() == "pwd":
+			elif command == "cd" or command == "pwd":
 				print(Path.cwd())
 
 			elif command.lower().startswith("cd "):
@@ -108,7 +108,7 @@ while True:
 					print(colored(f"{type(e)} happened with message {e}.", "red"))
 
 			elif command.lower().startswith("prompt "):
-				temp = command[7:].strip()
+				temp = command[7:]
 				change = True
 			elif command.lower() == "reset prompt" or command.lower() == "prompt":
 				change = False
@@ -127,7 +127,9 @@ while True:
 - pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
 - pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
 - pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)
-- pythoner: this is the custom python REPL"""
+- pythoner: this is the custom python REPL
+- os: prints your os
+- view: Its basically cat but with syntax highlighting"""
 						)
 					case "n":
 						continue
@@ -187,6 +189,13 @@ while True:
 					print(colored(f"Command {command} doesnt exist", "red"))
 			elif command.lower() == "os":
 				print("Windows" if platform == "nt" else "POSIX - like MacOS or Linux")
+
+			elif command.lower().startswith("view "):
+				viewed = command[5:].strip()
+				try:
+					subprocess.run([config["shell"], config["arg"], viewed], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				except FileNotFoundError:
+					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?"))
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)

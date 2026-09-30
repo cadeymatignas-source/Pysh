@@ -25,3 +25,5 @@ It has:
 - pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)
 
 - pythoner: this is the custom python repl, now put into a seperate keyword
+
+- view: pysh's equivalent to bat
