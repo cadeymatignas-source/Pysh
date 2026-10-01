@@ -1,14 +1,14 @@
-import subprocess
-import sys
-import tomllib
-from os import chdir, name
-from pathlib import Path
-from time import sleep
+lazy import subprocess
+lazy import sys
+lazy import tomllib
+lazy from os import chdir, name
+lazy from pathlib import Path
+lazy from time import sleep
 
-from prompt_toolkit import prompt
-from prompt_toolkit.lexers import PygmentsLexer
-from pygments.lexers import PythonLexer
-from termcolor import colored
+lazy from prompt_toolkit import prompt
+lazy from prompt_toolkit.lexers import PygmentsLexer
+lazy from pygments.lexers import PythonLexer
+lazy from termcolor import colored
 
 platform = name
 
@@ -26,6 +26,8 @@ User = "root"
 shell = "cmd.exe"
 arg = "/c"
 prompt_color = "magenta"
+use_uv = false
+use_uv-publish = false
 """
 		if platform == "nt"
 		else """package_manager = "sudo apt"
@@ -33,6 +35,8 @@ User = "root"
 shell = "bash"
 arg = "-c"
 prompt_color = "magenta"
+use_uv = false
+use_uv-publish = false
 """
 	)
 
@@ -79,7 +83,7 @@ while True:
 							subprocess.run([config["shell"], config["arg"], "cls"])
 						else:
 							subprocess.run([config["shell"], config["arg"], "clear"])
-					elif pyi.lower().startswith("pip "):
+					elif pyi.startswith("pip ") or pyi.startswith("uv "):
 						subprocess.run([config["shell"], config["arg"], pyi])
 					else:
 						try:
@@ -151,29 +155,67 @@ while True:
 						case "n":
 							print("Ok")
 			elif command.lower().startswith("pypub "):
-				pyb = command[6:].strip()
-				pybb = subprocess.run(
-					[
-						config["shell"],
-						config["arg"],
-						f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
-					],
-					stdin=sys.stdin,
-					stdout=sys.stdout,
-					stderr=sys.stderr,
-				)
+				if config["use_uv"]:
+					pyb = command[6:].strip()
+					if config["use_uv-publish"]:
+						pybb = subprocess.run(
+							[
+								config["shell"],
+								config["arg"],
+								f"uv build && uv-publish && uv pip install --upgrade {pyb}",
+							],
+							stdin=sys.stdin,
+							stdout=sys.stdout,
+							stderr=sys.stderr,
+						)
+					else:
+						pybb = subprocess.run(
+							[
+								config["shell"],
+								config["arg"],
+								f"uv build && uv publish && uv pip install --upgrade {pyb}",
+							],
+							stdin=sys.stdin,
+							stdout=sys.stdout,
+							stderr=sys.stderr,
+						)
+				else:
+					pyb = command[6:].strip()
+					pybb = subprocess.run(
+						[
+							config["shell"],
+							config["arg"],
+							f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
+						],
+						stdin=sys.stdin,
+						stdout=sys.stdout,
+						stderr=sys.stderr,
+					)
 				if pybb.returncode != 0:
-					downl = input("Oh no! Something failed! Download build and twine? (y/N)")
-					match downl.lower():
-						case "y":
-							subprocess.run(
-								[config["shell"], config["arg"], "pip install build twine"],
-								stdin=sys.stdin,
-								stdout=sys.stdout,
-								stderr=sys.stderr,
-							)
-						case "n":
-							print("Ok")
+					if config["use_uv"]:
+						downl = input("Oh no! Something failed! Download uv and uv-publish? (y/N)")
+						match downl.lower():
+							case "y":
+								subprocess.run(
+									[config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"],
+									stdin=sys.stdin,
+									stdout=sys.stdout,
+									stderr=sys.stderr,
+								)
+							case "n":
+								print("Ok")
+					else:
+						downl = input("Oh no! Something failed! Download build and twine? (y/N)")
+						match downl.lower():
+							case "y":
+								subprocess.run(
+									[config["shell"], config["arg"], "pipx install build twine"],
+									stdin=sys.stdin,
+									stdout=sys.stdout,
+									stderr=sys.stderr,
+								)
+							case "n":
+								print("Ok")
 			elif command.lower().startswith("pack get "):
 				getd = command[9:].strip()
 				subprocess.run(
