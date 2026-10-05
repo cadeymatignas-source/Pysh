@@ -240,6 +240,16 @@ while True:
 				)
 				if viewer.returncode != 0:
 					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
+			elif command.lower().startswith("cat "):
+				file = command[4:].strip()
+
+				try:
+					print(Path(file).read_text())
+				except FileNotFoundError:
+					print(colored(f"File {file} not found", "red"))
+			elif command.lower().startswith("echo "):
+				echoed = command[5:].strip()
+				print(echoed)
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
