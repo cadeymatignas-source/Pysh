@@ -268,6 +268,11 @@ while True:
 					print(f"Directory {path} not found")
 				except PermissionError:
 					print(f"Permission denied to access {path}. Make sure you have permissions to delete this directory.")
+			elif command.lower() == "setup":
+				print("Setting up the python terminal...")
+				subprocess.run(
+					[config["shell"], config["arg"], "pip install --upgrade pygments "], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
+				)
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
