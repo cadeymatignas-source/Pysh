@@ -1,9 +1,9 @@
+lazy import re
 lazy import subprocess
 lazy import sys
 lazy import tomllib
-lazy from os import chdir, name
+lazy from os import chdir, listdir, name
 lazy from pathlib import Path
-lazy from time import sleep
 
 lazy from prompt_toolkit import prompt
 lazy from prompt_toolkit.lexers import PygmentsLexer
@@ -60,12 +60,11 @@ while True:
 			temp = colored(f"PT -> {Path.cwd()}> ", config["prompt_color"])
 		prompter = temp
 		cmd = input(prompter).strip()
-		commands = [c.strip() for c in cmd.split("&&")]
 
+		commands = [c.strip() for c in re.split(r"&&|;", cmd) if c.strip()]
 		for command in commands:
 			if command.lower() == "exit":
 				print("Goodbye!")
-				sleep(0.5)
 				sys.exit()
 			elif command.lower() == "coolguy38 is sigma":
 				print("Yes, im sigma B)")
@@ -112,7 +111,7 @@ while True:
 					print(colored(f"{type(e)} happened with message {e}.", "red"))
 
 			elif command.lower().startswith("prompt "):
-				temp = command[7:]
+				temp = command[7:] + " "
 				change = True
 			elif command.lower() == "reset prompt" or command.lower() == "prompt":
 				change = False
@@ -250,6 +249,21 @@ while True:
 			elif command.lower().startswith("echo "):
 				echoed = command[5:].strip()
 				print(echoed)
+			elif command.lower() == "ls" or command.lower() == "dir":
+				path = "."
+				try:
+					for entry in listdir(path):
+						print(entry)
+				except FileNotFoundError:
+					print(f"Directory {path} not found")
+			elif command.lower().startswith("ls "):
+				pather = command[3:].strip()
+				path = pather.strip("'\"")
+				try:
+					for entry in listdir(path):
+						print(entry)
+				except FileNotFoundError:
+					print(f"Directory {path} not found")
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
