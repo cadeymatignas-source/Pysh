@@ -256,6 +256,8 @@ while True:
 						print(entry)
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
+				except PermissionError:
+					print(f"Permission denied to access {path}. Make sure you have permissions to delete this directory.")
 			elif command.lower().startswith("ls "):
 				pather = command[3:].strip()
 				path = pather.strip("'\"")
@@ -264,6 +266,8 @@ while True:
 						print(entry)
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
+				except PermissionError:
+					print(f"Permission denied to access {path}. Make sure you have permissions to delete this directory.")
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
