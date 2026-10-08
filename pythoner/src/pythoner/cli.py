@@ -52,4 +52,4 @@ def main():
 				exec("\n".join(block))
 
 			except Exception as e:
-				print(colored(f"{type(e).__name__}: {e}", "red"))
+				print(colored(f"{type(e)} happened with message {e}", "red"))
