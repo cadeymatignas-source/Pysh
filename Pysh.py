@@ -99,7 +99,6 @@ while True:
 - pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
 - pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
 - pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)
-- pythoner: this is the custom python REPL
 - os: prints your os
 - view: Its basically cat but with syntax highlighting"""
 						)
@@ -130,7 +129,7 @@ while True:
 							[
 								config["shell"],
 								config["arg"],
-								f"uv build && uv-publish && uv pip install --upgrade {pyb}",
+								f"uv build && uv-publish && uv pip install --upgrade --system {pyb}",
 							],
 							stdin=sys.stdin,
 							stdout=sys.stdout,
@@ -141,7 +140,7 @@ while True:
 							[
 								config["shell"],
 								config["arg"],
-								f"uv build && uv publish && uv pip install --upgrade {pyb}",
+								f"uv build && uv publish && uv pip install --upgrade --system {pyb}",
 							],
 							stdin=sys.stdin,
 							stdout=sys.stdout,
