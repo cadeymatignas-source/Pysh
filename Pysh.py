@@ -225,7 +225,7 @@ while True:
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
 				except PermissionError:
-					print(f"Permission denied to access {path}. Make sure you have permissions to delete this directory.")
+					print(f"Permission denied to access {path}. Make sure you have permissions to view this directory.")
 			elif command.lower().startswith("ls "):
 				pather = command[3:].strip()
 				path = pather.strip("'\"")
@@ -235,7 +235,7 @@ while True:
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
 				except PermissionError:
-					print(f"Permission denied to access {path}. Make sure you have permissions to delete this directory.")
+					print(f"Permission denied to access {path}. Make sure you have permissions to view this directory.")
 			elif command.lower() == "setup":
 				print("Setting up the python terminal...")
 				subprocess.run(
