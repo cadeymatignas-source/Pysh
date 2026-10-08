@@ -5,9 +5,6 @@ lazy import tomllib
 lazy from os import chdir, listdir, name
 lazy from pathlib import Path
 
-lazy from prompt_toolkit import prompt
-lazy from prompt_toolkit.lexers import PygmentsLexer
-lazy from pygments.lexers import PythonLexer
 lazy from termcolor import colored
 
 platform = name
@@ -70,34 +67,6 @@ while True:
 				print("Yes, im sigma B)")
 			elif command == "":
 				print("Empty command")
-			elif command.lower() == "pythoner":
-				print(sys.version)
-				while True:
-					pyi = prompt(">", lexer=PygmentsLexer(PythonLexer))
-
-					if pyi.lower() in ("exit", "exit()"):
-						break
-					elif pyi.lower() in ("cls", "clear"):
-						if platform.lower() == "nt":
-							subprocess.run([config["shell"], config["arg"], "cls"])
-						else:
-							subprocess.run([config["shell"], config["arg"], "clear"])
-					elif pyi.startswith("pip ") or pyi.startswith("uv "):
-						subprocess.run([config["shell"], config["arg"], pyi])
-					else:
-						try:
-							exec(pyi)
-						except IndentationError:
-							blockly = [pyi]
-							while True:
-								extra = prompt("->", lexer=PygmentsLexer(PythonLexer))
-								if extra == "":
-									break
-								blockly.append(extra)
-							exec("\n".join(blockly))
-						except Exception as e:
-							print(f"{type(e)} happened with message {e}.")
-
 			elif command == "cd" or command == "pwd":
 				print(Path.cwd())
 

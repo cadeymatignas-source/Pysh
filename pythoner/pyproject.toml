@@ -1,0 +1,28 @@
+[build-system]
+requires = ["uv_build>=0.12.21,<0.13"]
+build-backend = "uv_build"
+
+[project]
+name = "Pythoner"
+version = "0.1.0"
+authors = [{ name = "Cade", email = "cadey.matignas@gmail.com" }]
+description = "A custom python REPL"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "prompt_toolkit>=3.0.38",
+    "pygments>=2.16.1",
+    "termcolor>=2.4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/cadeymatignas-source/pysh"
+
+
+[project.scripts]
+pythoner = "pythoner.cli:main"
