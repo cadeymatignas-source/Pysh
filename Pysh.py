@@ -1,19 +1,20 @@
+lazy import os
 lazy import re
 lazy import subprocess
 lazy import sys
+lazy import time
 lazy import tomllib
-lazy from os import chdir, listdir, name
 lazy from pathlib import Path
 
 lazy from termcolor import colored
 
-platform = name
-
-config_path = Path.home() / ".pysh" / "config.toml"
-config_py_path = Path.home() / ".pysh" / "config.py"
+platform = os.name
+system = sys.platform
+config_path = Path.home() / ".pysh" / "pysh.toml"
+config_py_path = Path.home() / ".pysh" / ".pyshrc"
 
 if not config_path.exists():
-	print("Hello new user. Generating config.toml")
+	print("Hello new user. Generating pysh.toml")
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -38,7 +39,7 @@ use_uv-publish = false
 	)
 
 if not config_py_path.exists():
-	print("Generating config.py")
+	print("Generating .pyshrc")
 
 	config_py_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -74,7 +75,7 @@ while True:
 				path = command[3:].strip().strip("'\"")
 
 				try:
-					chdir(path)
+					os.chdir(path)
 
 				except Exception as e:
 					print(colored(f"{type(e)} happened with message {e}.", "red"))
@@ -197,7 +198,7 @@ while True:
 				except NameError:
 					print(colored(f"Command {command} doesnt exist", "red"))
 			elif command.lower() == "os":
-				print("Windows" if platform == "nt" else "POSIX - like MacOS or Linux")
+				print(system)
 
 			elif command.lower().startswith("view "):
 				viewed = command[5:].strip()
@@ -220,7 +221,7 @@ while True:
 			elif command.lower() == "ls" or command.lower() == "dir":
 				path = "."
 				try:
-					for entry in listdir(path):
+					for entry in os.listdir(path):
 						print(entry)
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
@@ -230,7 +231,7 @@ while True:
 				pather = command[3:].strip()
 				path = pather.strip("'\"")
 				try:
-					for entry in listdir(path):
+					for entry in os.listdir(path):
 						print(entry)
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
@@ -241,13 +242,26 @@ while True:
 				subprocess.run(
 					[config["shell"], config["arg"], "pip install --upgrade pygments "], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
 				)
-			elif command.lower().endswith(".py") and not command.lower().startswith("python "):
+			elif command.lower().endswith(".pysh") and not command.lower().startswith("python "):
 				try:
 					exec(Path(command).read_text())
 				except FileNotFoundError:
 					print(colored(f"File {command} not found", "red"))
+
+			elif command.lower().startswith("md "):
+				makedir = command[3:].strip().strip("'\"")
+				Path.makedir(makedir, exist_ok=True)
+
+			elif command.lower().startswith("makedir "):
+				makedir = command[9:].strip().strip("'\"")
+				Path.makedir(makedir, exist_ok=True)
+			elif command.lower() == "time":
+				print(time.strftime("%-I:%M %p"))
+
 			else:
 				try:
+					os.chdir(command)
+				except FileNotFoundError:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 				except Exception as e:
