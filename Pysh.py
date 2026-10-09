@@ -256,7 +256,7 @@ while True:
 				makedir = command[9:].strip().strip("'\"")
 				Path.makedir(makedir, exist_ok=True)
 			elif command.lower() == "time":
-				print(time.strftime("%-I:%M %p"))
+				print(time.strftime("%I:%M %p"))
 
 			else:
 				try:
