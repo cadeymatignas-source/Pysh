@@ -250,11 +250,11 @@ while True:
 
 			elif command.lower().startswith("md "):
 				makedir = command[3:].strip().strip("'\"")
-				Path.makedir(makedir, exist_ok=True)
+				Path(makedir).mkdir(exist_ok=True)
 
-			elif command.lower().startswith("makedir "):
-				makedir = command[9:].strip().strip("'\"")
-				Path.makedir(makedir, exist_ok=True)
+			elif command.lower().startswith("mkdir "):
+				makedir = command[6:].strip().strip("'\"")
+				Path(makedir).mkdir(exist_ok=True)
 			elif command.lower() == "time":
 				print(time.strftime("%I:%M %p"))
 
