@@ -241,6 +241,11 @@ while True:
 				subprocess.run(
 					[config["shell"], config["arg"], "pip install --upgrade pygments "], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
 				)
+			elif command.lower().endswith(".py") and not command.lower().startswith("python "):
+				try:
+					exec(Path(command).read_text())
+				except FileNotFoundError:
+					print(colored(f"File {command} not found", "red"))
 			else:
 				try:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
