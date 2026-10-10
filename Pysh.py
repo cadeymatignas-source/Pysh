@@ -277,7 +277,7 @@ while True:
 			elif command.lower() == "time":
 				print(time.strftime("%I:%M %p"))
 			elif command.lower() in ["cls", "clear"]:
-				subprocess.run("cls" if os.name == "nt" else "clear", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				subprocess.run("cls" if platform == "nt" else "clear", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 			else:
 				try:
