@@ -13,6 +13,7 @@ system = sys.platform
 config_path = Path.home() / ".pysh" / "pysh.toml"
 config_py_path = Path.home() / ".pysh" / ".pyshrc"
 
+
 if not config_path.exists():
 	print("Hello new user. Generating pysh.toml")
 
@@ -50,6 +51,19 @@ with config_path.open("rb") as f:
 
 exec(config_py_path.read_text())
 
+variables = {
+	"USER": config["User"],
+	"SHELL": "pysh",
+	"HOME": Path.home(),
+}
+
+
+def expand_vars(text):
+	for name, value in variables.items():
+		text = text.replace(f"${name}", str(value))
+	return text
+
+
 print(colored(f"Welcome to the python terminal, {config['User']}!", "blue"))
 change = False
 while True:
@@ -75,7 +89,7 @@ while True:
 				path = command[3:].strip().strip("'\"")
 
 				try:
-					os.chdir(path)
+					os.chdir(expand_vars(path))
 
 				except Exception as e:
 					print(colored(f"{type(e)} happened with message {e}.", "red"))
@@ -204,7 +218,7 @@ while True:
 				viewed = command[5:].strip()
 
 				viewer = subprocess.run(
-					[config["shell"], config["arg"], f"pygmentize {viewed}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
+					[config["shell"], config["arg"], f"pygmentize {expand_vars(viewed)}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
 				)
 				if viewer.returncode != 0:
 					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
@@ -212,13 +226,13 @@ while True:
 				file = command[4:].strip()
 
 				try:
-					print(Path(file).read_text())
+					print(expand_vars(Path(file).read_text()))
 				except FileNotFoundError:
 					print(colored(f"File {file} not found", "red"))
 			elif command.lower().startswith("echo "):
 				echoed = command[5:].strip()
-				print(echoed)
-			elif command.lower() == "ls" or command.lower() == "dir":
+				print(expand_vars(echoed))
+			elif command.lower() in ["ls", "dir"]:
 				path = "."
 				try:
 					for entry in os.listdir(path):
@@ -229,7 +243,7 @@ while True:
 					print(f"Permission denied to access {path}. Make sure you have permissions to view this directory.")
 			elif command.lower().startswith("ls "):
 				pather = command[3:].strip()
-				path = pather.strip("'\"")
+				path = expand_vars(pather.strip("'\""))
 				try:
 					for entry in os.listdir(path):
 						print(entry)
@@ -250,17 +264,24 @@ while True:
 
 			elif command.lower().startswith("md "):
 				makedir = command[3:].strip().strip("'\"")
-				Path(makedir).mkdir(exist_ok=True)
-
+				try:
+					Path(makedir).mkdir(exist_ok=True)
+				except PermissionError:
+					print(f"You can't make a directory in {Path.cwd()}")
 			elif command.lower().startswith("mkdir "):
 				makedir = command[6:].strip().strip("'\"")
-				Path(makedir).mkdir(exist_ok=True)
+				try:
+					Path(makedir).mkdir(exist_ok=True)
+				except PermissionError:
+					print(f"You can't make a directory in {Path.cwd()}")
 			elif command.lower() == "time":
 				print(time.strftime("%I:%M %p"))
+			elif command.lower() in ["cls", "clear"]:
+				subprocess.run("cls" if os.name == "nt" else "clear", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 			else:
 				try:
-					os.chdir(command)
+					os.chdir(expand_vars(command))
 				except FileNotFoundError:
 					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
