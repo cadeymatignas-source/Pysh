@@ -10,12 +10,12 @@ lazy from termcolor import colored
 
 platform = os.name
 system = sys.platform
-config_path = Path.home() / ".pysh" / "pysh.toml"
-config_py_path = Path.home() / ".pysh" / ".pyshrc"
+config_path = Path.home() / ".pysh.toml"
+config_py_path = Path.home() / ".pyshrc"
 
 
 if not config_path.exists():
-	print("Hello new user. Generating pysh.toml")
+	print("Hello new user. Generating .pysh.toml")
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
