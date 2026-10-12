@@ -22,8 +22,6 @@ if not config_path.exists():
 	config_path.write_text(
 		"""package_manager = "winget"
 User = "root"
-shell = "cmd.exe"
-arg = "/c"
 prompt_color = "magenta"
 use_uv = false
 use_uv-publish = false
@@ -31,8 +29,6 @@ use_uv-publish = false
 		if platform == "nt"
 		else """package_manager = "sudo apt"
 User = "root"
-shell = "bash"
-arg = "-c"
 prompt_color = "magenta"
 use_uv = false
 use_uv-publish = false
@@ -277,15 +273,22 @@ while True:
 			elif command.lower() == "time":
 				print(time.strftime("%I:%M %p"))
 			elif command.lower() in ["cls", "clear"]:
-				subprocess.run("cls" if platform == "nt" else "clear", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				subprocess.run("cls" if platform == "nt" else "clear", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True)
 
 			else:
 				try:
 					os.chdir(expand_vars(command))
 				except FileNotFoundError:
-					subprocess.run([config["shell"], config["arg"], command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+					subprocess.run([command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 
 				except Exception as e:
 					print(colored(f"Error {e} with type {type(e)}", "red"))
 	except KeyboardInterrupt:
+		print("^C")
 		continue
+	except EOFError:
+		print("^D")
+		print("Goodbye!")
+		sys.exit()
+	except Exception as e:
+		print(colored(f"Error {e} with type {type(e)}", "red"))
