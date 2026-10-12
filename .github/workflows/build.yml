@@ -1,0 +1,53 @@
+name: Build Pysh
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.15"
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller termcolor
+
+      - name: Build
+        run: |
+          pyinstaller --onefile pysh.py --name pysh
+
+      - name: Rename Windows artifact
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Move-Item dist/pysh.exe dist/pysh-windows.exe
+
+      - name: Rename Linux artifact
+        if: runner.os == 'Linux'
+        run: |
+          mv dist/pysh dist/pysh-linux
+
+      - name: Rename macOS artifact
+        if: runner.os == 'macOS'
+        run: |
+          mv dist/pysh dist/pysh-macos
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pysh-${{ runner.os }}
+          path: dist/*
