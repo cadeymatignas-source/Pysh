@@ -29,7 +29,7 @@ jobs:
 
       - name: Build
         run: |
-          pyinstaller --onefile pysh.py --name pysh
+          pyinstaller --onefile Pysh.py --name pysh
 
       - name: Rename Windows artifact
         if: runner.os == 'Windows'
