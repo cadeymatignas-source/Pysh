@@ -1,5 +1,6 @@
 lazy import os
 lazy import re
+lazy import shlex
 lazy import subprocess
 lazy import sys
 lazy import time
@@ -70,6 +71,8 @@ while True:
 		cmd = input(prompter).strip()
 
 		commands = [c.strip() for c in re.split(r"&&|;", cmd) if c.strip()]
+		has_and = "&&" in commands
+		success = True
 		for command in commands:
 			if command.lower() == "exit":
 				print("Goodbye!")
@@ -89,6 +92,7 @@ while True:
 
 				except Exception as e:
 					print(colored(f"{type(e)} happened with message {e}.", "red"))
+					success = False
 
 			elif command.lower().startswith("prompt "):
 				temp = command[7:] + " "
@@ -117,9 +121,7 @@ while True:
 						continue
 			elif command.lower().startswith("pyexe "):
 				pyn = command[6:].strip()
-				pynn = subprocess.run(
-					[config["shell"], config["arg"], f"pyinstaller --onefile {pyn}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
-				)
+				pynn = subprocess.run([config["shell"], config["arg"], f"pyinstaller --onefile {pyn}"], capture_output=True)
 				if pynn.returncode != 0:
 					down = input("Oh no! Pyinstaller failed. Download? (y/N)")
 					match down.lower():
@@ -132,6 +134,7 @@ while True:
 							)
 						case "n":
 							print("Ok")
+					success = False
 			elif command.lower().startswith("pypub "):
 				if config["use_uv"]:
 					pyb = command[6:].strip()
@@ -142,9 +145,7 @@ while True:
 								config["arg"],
 								f"uv build && uv-publish && uv pip install --upgrade --system {pyb}",
 							],
-							stdin=sys.stdin,
-							stdout=sys.stdout,
-							stderr=sys.stderr,
+							capture_output=True,
 						)
 					else:
 						pybb = subprocess.run(
@@ -153,9 +154,7 @@ while True:
 								config["arg"],
 								f"uv build && uv publish && uv pip install --upgrade --system {pyb}",
 							],
-							stdin=sys.stdin,
-							stdout=sys.stdout,
-							stderr=sys.stderr,
+							capture_output=True,
 						)
 				else:
 					pyb = command[6:].strip()
@@ -165,23 +164,17 @@ while True:
 							config["arg"],
 							f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
 						],
-						stdin=sys.stdin,
-						stdout=sys.stdout,
-						stderr=sys.stderr,
+						capture_output=True,
 					)
 				if pybb.returncode != 0:
 					if config["use_uv"]:
 						downl = input("Oh no! Something failed! Download uv and uv-publish? (y/N)")
 						match downl.lower():
 							case "y":
-								subprocess.run(
-									[config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"],
-									stdin=sys.stdin,
-									stdout=sys.stdout,
-									stderr=sys.stderr,
-								)
+								subprocess.run([config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"], capture_output=True)
 							case "n":
 								print("Ok")
+
 					else:
 						downl = input("Oh no! Something failed! Download build and twine? (y/N)")
 						match downl.lower():
@@ -194,6 +187,7 @@ while True:
 								)
 							case "n":
 								print("Ok")
+					success = False
 			elif command.lower().startswith("pack get "):
 				getd = command[9:].strip()
 				subprocess.run(
@@ -207,6 +201,7 @@ while True:
 					exec(command)
 				except NameError:
 					print(colored(f"Command {command} doesnt exist", "red"))
+					success = False
 			elif command.lower() == "os":
 				print(system)
 
@@ -218,6 +213,7 @@ while True:
 				)
 				if viewer.returncode != 0:
 					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
+					success = False
 			elif command.lower().startswith("cat "):
 				file = command[4:].strip()
 
@@ -225,6 +221,7 @@ while True:
 					print(expand_vars(Path(file).read_text()))
 				except FileNotFoundError:
 					print(colored(f"File {file} not found", "red"))
+					success = False
 			elif command.lower().startswith("echo "):
 				echoed = command[5:].strip()
 				print(expand_vars(echoed))
@@ -235,8 +232,10 @@ while True:
 						print(entry)
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
+					success = False
 				except PermissionError:
 					print(f"Permission denied to access {path}. Make sure you have permissions to view this directory.")
+					success = False
 			elif command.lower().startswith("ls "):
 				pather = command[3:].strip()
 				path = expand_vars(pather.strip("'\""))
@@ -245,8 +244,10 @@ while True:
 						print(entry)
 				except FileNotFoundError:
 					print(f"Directory {path} not found")
+					success = False
 				except PermissionError:
 					print(f"Permission denied to access {path}. Make sure you have permissions to view this directory.")
+					success = False
 			elif command.lower() == "setup":
 				print("Setting up the python terminal...")
 				subprocess.run(
@@ -257,6 +258,7 @@ while True:
 					exec(Path(command).read_text())
 				except FileNotFoundError:
 					print(colored(f"File {command} not found", "red"))
+					success = False
 
 			elif command.lower().startswith("md "):
 				makedir = command[3:].strip().strip("'\"")
@@ -264,12 +266,14 @@ while True:
 					Path(makedir).mkdir(exist_ok=True)
 				except PermissionError:
 					print(f"You can't make a directory in {Path.cwd()}")
+					success = False
 			elif command.lower().startswith("mkdir "):
 				makedir = command[6:].strip().strip("'\"")
 				try:
 					Path(makedir).mkdir(exist_ok=True)
 				except PermissionError:
 					print(f"You can't make a directory in {Path.cwd()}")
+					success = False
 			elif command.lower() == "time":
 				print(time.strftime("%I:%M %p"))
 			elif command.lower() in ["cls", "clear"]:
@@ -278,11 +282,14 @@ while True:
 			else:
 				try:
 					os.chdir(expand_vars(command))
-				except FileNotFoundError:
-					subprocess.run([command], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				except Exception:
+					args = shlex.split(command)
 
-				except Exception as e:
-					print(colored(f"Error {e} with type {type(e)}", "red"))
+					subprocess.run(args, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+
+			if not success and has_and:
+				break
+
 	except KeyboardInterrupt:
 		print("^C")
 		continue
