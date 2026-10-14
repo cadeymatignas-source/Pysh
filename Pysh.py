@@ -79,8 +79,6 @@ while True:
 				sys.exit()
 			elif command.lower() == "coolguy38 is sigma":
 				print("Yes, im sigma B)")
-			elif command == "":
-				print("Empty command")
 			elif command == "cd" or command == "pwd":
 				print(Path.cwd())
 
