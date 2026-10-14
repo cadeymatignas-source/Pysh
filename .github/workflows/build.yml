@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@4
 
       - uses: actions/setup-python@v5
         with:
@@ -25,27 +25,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pyinstaller termcolor
+          pip install pyinstaller termcolor pygments
 
       - name: Build
         run: |
           pyinstaller --onefile Pysh.py --name pysh
-
-      - name: Rename Windows artifact
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          Move-Item dist/pysh.exe dist/pysh-windows.exe
-
-      - name: Rename Linux artifact
-        if: runner.os == 'Linux'
-        run: |
-          mv dist/pysh dist/pysh-linux
-
-      - name: Rename macOS artifact
-        if: runner.os == 'macOS'
-        run: |
-          mv dist/pysh dist/pysh-macos
 
       - uses: actions/upload-artifact@v4
         with:
