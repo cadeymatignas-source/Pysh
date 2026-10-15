@@ -20,19 +20,36 @@ if not config_path.exists():
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
+if system == "win32":
 	config_path.write_text(
 		"""package_manager = "winget"
 User = "root"
 prompt_color = "magenta"
 use_uv = false
 use_uv-publish = false
+AUTOCD = true
 """
-		if platform == "nt"
-		else """package_manager = "sudo apt"
+	)
+
+
+elif system == "linux":
+	config_path.write_text(
+		"""package_manager = "sudo apt"
 User = "root"
 prompt_color = "magenta"
 use_uv = false
 use_uv-publish = false
+AUTOCD = true
+"""
+	)
+elif system == "darwin":
+	config_path.write_text(
+		"""package_manager = "brew"
+User = "root"
+prompt_color = "magenta"
+use_uv = false
+use_uv-publish = false
+AUTOCD = true
 """
 	)
 
@@ -70,7 +87,7 @@ while True:
 		prompter = temp
 		cmd = input(prompter).strip()
 
-		commands = [c.strip() for c in re.split(r"&&|;", cmd) if c.strip()]
+		commands = [c.strip() for c in re.split(r"&&|;|&", cmd) if c.strip()]
 		has_and = "&&" in commands
 		success = True
 		for command in commands:
@@ -99,24 +116,29 @@ while True:
 				change = False
 
 			elif command.lower() == "help":
-				subprocess.run([config["shell"], config["arg"], "help"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
-				yes = input("Would you like more? (y/N)")
-				match yes.lower():
-					case "y":
-						print(
-							"""- help: explains every command
+				print(
+					"""- help: explains every command
 - coolguy38 is sigma: responds
 - reset prompt: Resets the prompt
 - prompt: Also resets the prompt
 - pwd: Prints the current working directory
-- pyexe: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
-- pypub: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
+- pyexe <text>: Runs pyinstaller --onefile for you. If it reaches an error it asks you if you want to download pyinstaller
+- pypub <text>: Builds and publishes your library to pypi. If it reaches an error it asks you if you want to download twine and build
 - pack get: use this like the package manager you chose. (like pack get install Git.git if using winget)
 - os: prints your os
-- view: Its basically cat but with syntax highlighting"""
-						)
-					case "n":
-						continue
+- view <path>: Its basically cat but with syntax highlighting
+- prompt <text>: Changes the prompt to <text>
+- echo <text>: Prints <text>
+- ls/dir: Lists the current directory
+- ls <path>/dir <path>: Lists the directory at <path>
+- md/mkdir <dir>: Makes a directory called <dir>
+- time: Prints the current time
+- cls/clear: Clears the terminal
+- cd <path>: Changes the current directory to <path>
+- cat <file>: Prints the contents of <file>
+- <file>.pysh: Runs the .pysh file"""
+				)
+
 			elif command.lower().startswith("pyexe "):
 				pyn = command[6:].strip()
 				pynn = subprocess.run([config["shell"], config["arg"], f"pyinstaller --onefile {pyn}"], capture_output=True)
@@ -251,7 +273,7 @@ while True:
 				subprocess.run(
 					[config["shell"], config["arg"], "pip install --upgrade pygments "], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
 				)
-			elif command.lower().endswith(".pysh") and not command.lower().startswith("python "):
+			elif command.lower().endswith(".pysh") or command.lower().endswith(".py") and not command.lower().startswith("python"):
 				try:
 					exec(Path(command).read_text())
 				except FileNotFoundError:
@@ -278,13 +300,13 @@ while True:
 				subprocess.run("cls" if platform == "nt" else "clear", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True)
 
 			else:
-				try:
-					os.chdir(expand_vars(command))
-				except Exception:
-					args = shlex.split(command)
+				if config["AUTOCD"]:
+					try:
+						os.chdir(expand_vars(command))
+					except Exception:
+						args = shlex.split(command)
 
-					subprocess.run(args, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
-
+				subprocess.run(args, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
 			if not success and has_and:
 				break
 
