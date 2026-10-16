@@ -305,8 +305,10 @@ while True:
 						os.chdir(expand_vars(command))
 					except Exception:
 						args = shlex.split(command)
-
-				subprocess.run(args, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+						subprocess.run(args, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+				else:
+					args = shlex.split(command)
+					subprocess.run(args, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)	
 			if not success and has_and:
 				break
 
