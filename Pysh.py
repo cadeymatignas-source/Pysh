@@ -65,11 +65,7 @@ with config_path.open("rb") as f:
 
 exec(config_py_path.read_text())
 
-variables = {
-	"USER": config["User"],
-	"SHELL": "pysh",
-	"HOME": Path.home(),
-}
+variables = {"USER": config["User"], "SHELL": sys.executable, "HOME": Path.home(), "USERPROFILE": Path.home()}
 
 
 def expand_vars(text):
@@ -228,9 +224,7 @@ while True:
 			elif command.lower().startswith("view "):
 				viewed = command[5:].strip()
 
-				viewer = subprocess.run(
-					[config["shell"], config["arg"], f"pygmentize {expand_vars(viewed)}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
-				)
+				viewer = subprocess.run(f"pygmentize {expand_vars(viewed)}", capture_output=True, shell=True)
 				if viewer.returncode != 0:
 					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
 					success = False
