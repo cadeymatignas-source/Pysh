@@ -31,11 +31,10 @@ jobs:
         run: |
           pyinstaller --onefile Pysh.py --name Pysh
       - name: Build updater
-  run: |
+        run: |
     cd update
     pyinstaller --onefile updater.py --name Update
 
-      - name: Upload archives
       - uses: actions/upload-artifact@v4
         with:
           name: Pysh-${{ runner.os }}
