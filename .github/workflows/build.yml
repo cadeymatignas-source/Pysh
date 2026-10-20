@@ -39,3 +39,4 @@ jobs:
         with:
           name: Pysh-${{ runner.os }}
           path: dist/*
+          path: update/dist/*
