@@ -32,8 +32,8 @@ jobs:
           pyinstaller --onefile Pysh.py --name Pysh
       - name: Build updater
         run: |
-    cd update
-    pyinstaller --onefile updater.py --name Update
+          cd update
+          pyinstaller --onefile updater.py --name Update
 
       - uses: actions/upload-artifact@v4
         with:
