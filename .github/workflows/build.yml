@@ -25,12 +25,17 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pyinstaller termcolor pygments
+          pip install --upgrade pyinstaller termcolor pygments
 
-      - name: Build
+      - name: Build pysh
         run: |
           pyinstaller --onefile Pysh.py --name Pysh
+      - name: Build updater
+  run: |
+    cd update
+    pyinstaller --onefile updater.py --name Update
 
+      - name: Upload archives
       - uses: actions/upload-artifact@v4
         with:
           name: Pysh-${{ runner.os }}
