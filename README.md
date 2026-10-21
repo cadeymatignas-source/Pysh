@@ -1,16 +1,19 @@
 # Pysh (PYthon SHell)
 
-## This is a terminal shell I made with python
+## This is a shell coded entirely in Python
+
+Pysh is a Python-based shell tailored for Python development
 
 Reasons to use Pysh:
+1. It has tools for Python development;
+2. It is cross-platform;
+3. It has native uv support;
+4. Self-updating;
+5. And it is customizable.
 
-1. It has native pyexe and pypub functions for python development
-2. It has native configuration
-3. It has native uv support
-4. It has its own implemation of the `bat` function (`view`)
 
-Pythoner is another related project
+## Pythoner
 
-It was extracted from pysh, it has native UV and pip support.
-
-[More details here](https://pypi.org/project/Pythoner/)
+Pythoner is another related project.<br>
+It was extracted from pysh.<br>
+[Click here for more details](https://pypi.org/project/Pythoner/)
