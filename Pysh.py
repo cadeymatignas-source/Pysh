@@ -136,7 +136,9 @@ while True:
 
 			elif command.lower().startswith("pyexe "):
 				pyn = command[6:].strip()
-				pynn = subprocess.run([config["shell"], config["arg"], f"pyinstaller --onefile {pyn}"], capture_output=True)
+				pynn = subprocess.run(
+					[config["shell"], config["arg"], f"pyinstaller --onefile {pyn}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
+				)
 				if pynn.returncode != 0:
 					down = input("Oh no! Pyinstaller failed. Download? (y/N)")
 					match down.lower():
@@ -160,7 +162,9 @@ while True:
 								config["arg"],
 								f"uv build && uv-publish && uv pip install --upgrade --system {pyb}",
 							],
-							capture_output=True,
+							stdin=sys.stdin,
+							stdout=sys.stdout,
+							stderr=sys.stderr,
 							text=True,
 						)
 					else:
@@ -170,8 +174,9 @@ while True:
 								config["arg"],
 								f"uv build && uv publish && uv pip install --upgrade --system {pyb}",
 							],
-							capture_output=True,
-							text=True,
+							stdin=sys.stdin,
+							stdout=sys.stdout,
+							stderr=sys.stderr,
 						)
 				else:
 					pyb = command[6:].strip()
@@ -181,8 +186,9 @@ while True:
 							config["arg"],
 							f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
 						],
-						capture_output=True,
-						text=True,
+						stdin=sys.stdin,
+						stdout=sys.stdout,
+						stderr=sys.stderr,
 					)
 				if pybb.returncode != 0:
 					if config["use_uv"]:
@@ -190,7 +196,10 @@ while True:
 						match downl.lower():
 							case "y":
 								subprocess.run(
-									[config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"], capture_output=True, text=True
+									[config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"],
+									stdin=sys.stdin,
+									stdout=sys.stdout,
+									stderr=sys.stderr,
 								)
 							case "n":
 								print("Ok")
@@ -228,7 +237,9 @@ while True:
 			elif command.lower().startswith("view "):
 				viewed = command[5:].strip()
 
-				viewer = subprocess.run(f"pygmentize {expand_vars(viewed)}", capture_output=True, shell=True, text=True)
+				viewer = subprocess.run(
+					f"pygmentize {expand_vars(viewed)}", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True, text=True
+				)
 				if viewer.returncode != 0:
 					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
 					success = False
