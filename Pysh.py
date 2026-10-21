@@ -20,38 +20,37 @@ if not config_path.exists():
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
-if system == "win32":
-	config_path.write_text(
-		"""package_manager = "winget"
-User = "root"
-prompt_color = "magenta"
-use_uv = false
-use_uv-publish = false
-AUTOCD = true
-"""
-	)
+	if system == "win32":
+		config_path.write_text(
+			"""package_manager = "winget"
+	User = "root"
+	prompt_color = "magenta"
+	use_uv = false
+	use_uv-publish = false
+	AUTOCD = true
+	"""
+		)
 
-
-elif system == "linux":
-	config_path.write_text(
-		"""package_manager = "sudo apt"
-User = "root"
-prompt_color = "magenta"
-use_uv = false
-use_uv-publish = false
-AUTOCD = true
-"""
-	)
-elif system == "darwin":
-	config_path.write_text(
-		"""package_manager = "brew"
-User = "root"
-prompt_color = "magenta"
-use_uv = false
-use_uv-publish = false
-AUTOCD = true
-"""
-	)
+	elif system == "linux":
+		config_path.write_text(
+			"""package_manager = "sudo apt"
+	User = "root"
+	prompt_color = "magenta"
+	use_uv = false
+	use_uv-publish = false
+	AUTOCD = true
+	"""
+		)
+	elif system == "darwin":
+		config_path.write_text(
+			"""package_manager = "brew"
+	User = "root"
+	prompt_color = "magenta"
+	use_uv = false
+	use_uv-publish = false
+	AUTOCD = true
+	"""
+		)
 
 if not config_py_path.exists():
 	print("Generating .pyshrc")
