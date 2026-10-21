@@ -161,6 +161,7 @@ while True:
 								f"uv build && uv-publish && uv pip install --upgrade --system {pyb}",
 							],
 							capture_output=True,
+							text=True,
 						)
 					else:
 						pybb = subprocess.run(
@@ -170,6 +171,7 @@ while True:
 								f"uv build && uv publish && uv pip install --upgrade --system {pyb}",
 							],
 							capture_output=True,
+							text=True,
 						)
 				else:
 					pyb = command[6:].strip()
@@ -180,13 +182,16 @@ while True:
 							f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
 						],
 						capture_output=True,
+						text=True,
 					)
 				if pybb.returncode != 0:
 					if config["use_uv"]:
 						downl = input("Oh no! Something failed! Download uv and uv-publish? (y/N)")
 						match downl.lower():
 							case "y":
-								subprocess.run([config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"], capture_output=True)
+								subprocess.run(
+									[config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"], capture_output=True, text=True
+								)
 							case "n":
 								print("Ok")
 
@@ -223,7 +228,7 @@ while True:
 			elif command.lower().startswith("view "):
 				viewed = command[5:].strip()
 
-				viewer = subprocess.run(f"pygmentize {expand_vars(viewed)}", capture_output=True, shell=True)
+				viewer = subprocess.run(f"pygmentize {expand_vars(viewed)}", capture_output=True, shell=True, text=True)
 				if viewer.returncode != 0:
 					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
 					success = False
