@@ -40,4 +40,10 @@ jobs:
           name: Pysh-${{ runner.os }}
           path: |
             dist/*
+          name: Installer-${{ runner.os }}
+          path: |
+            update/dist/*
+          name: Pysh-Bundle-${{ runner.os }}
+          path: |
+            dist/*
             update/dist/*
