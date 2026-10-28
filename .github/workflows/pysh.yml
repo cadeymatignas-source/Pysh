@@ -33,7 +33,7 @@ jobs:
       - name: Build updater
         run: |
           cd update
-          pyinstaller updater.spec --name pyshupdate
+          pyinstaller --onefile updater.py --name pyshupdate
 
       - uses: actions/upload-artifact@v4
         with:

@@ -152,7 +152,7 @@ while True:
 						case "n":
 							print("Ok")
 					success = False
-			elif command().startswith("pypub "):
+			elif command.startswith("pypub "):
 				if config["use_uv"]:
 					pyb = command[6:].strip()
 					if config["use_uv-publish"]:
@@ -220,7 +220,7 @@ while True:
 			elif command.startswith("pack get "):
 				getd = command[9:].strip()
 				subprocess.run(
-					[config["shell"], config["arg"], f"{config['package_manager']} {getd}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
+					f"{config['package_manager']} {getd}", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True
 				)
 			elif command == "whoami":
 				print(f"You are {config['User']}")
