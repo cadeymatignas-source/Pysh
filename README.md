@@ -21,7 +21,7 @@ It was extracted from pysh.<br>
 
 ## Installation
 
-[To install Pysh, click this link and find your OS release](https://github.com/cadeymatignas-source/pysh/releases/latest)
+[To install Pysh, click this link and find your OS release](https://github.com/cadeymatignas-source/pysh/releases/latest). <br>
 Alternatively, you can run the `pyshupdate` CLI included in the zip file.
 ```bash
 pyshupdate
