@@ -40,9 +40,13 @@ jobs:
           name: Pysh-${{ runner.os }}
           path: |
             dist/*
+      - uses: actions/upload-artifact@v4
+        with:
           name: Installer-${{ runner.os }}
           path: |
             update/dist/*
+      - uses: actions/upload-artifact@v4
+        with:
           name: Pysh-Bundle-${{ runner.os }}
           path: |
             dist/*
