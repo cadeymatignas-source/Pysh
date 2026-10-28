@@ -86,15 +86,15 @@ while True:
 		has_and = "&&" in commands
 		success = True
 		for command in commands:
-			if command.lower() == "exit":
+			if command == "exit":
 				print("Goodbye!")
 				sys.exit()
-			elif command.lower() == "coolguy38 is sigma":
+			elif command == "coolguy38 is sigma":
 				print("Yes, im sigma B)")
 			elif command == "cd" or command == "pwd":
 				print(Path.cwd())
 
-			elif command.lower().startswith("cd "):
+			elif command.startswith("cd "):
 				path = command[3:].strip().strip("'\"")
 
 				try:
@@ -104,7 +104,7 @@ while True:
 					print(colored(f"{type(e)} happened with message {e}.", "red"))
 					success = False
 
-			elif command.lower().startswith("prompt "):
+			elif command.startswith("prompt "):
 				temp = command[7:] + " "
 				change = True
 			elif command.lower() == "reset prompt" or command.lower() == "prompt":
@@ -134,7 +134,7 @@ while True:
 - <file>.pysh: Runs the .pysh file"""
 				)
 
-			elif command.lower().startswith("pyexe "):
+			elif command.startswith("pyexe "):
 				pyn = command[6:].strip()
 				pynn = subprocess.run(
 					[config["shell"], config["arg"], f"pyinstaller --onefile {pyn}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
@@ -152,7 +152,7 @@ while True:
 						case "n":
 							print("Ok")
 					success = False
-			elif command.lower().startswith("pypub "):
+			elif command().startswith("pypub "):
 				if config["use_uv"]:
 					pyb = command[6:].strip()
 					if config["use_uv-publish"]:
@@ -217,24 +217,24 @@ while True:
 							case "n":
 								print("Ok")
 					success = False
-			elif command.lower().startswith("pack get "):
+			elif command.startswith("pack get "):
 				getd = command[9:].strip()
 				subprocess.run(
 					[config["shell"], config["arg"], f"{config['package_manager']} {getd}"], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
 				)
-			elif command.lower() == "whoami":
+			elif command == "whoami":
 				print(f"You are {config['User']}")
 
-			elif command.lower().endswith(")"):
+			elif command.endswith(")"):
 				try:
 					exec(command)
 				except NameError:
 					print(colored(f"Command {command} doesnt exist", "red"))
 					success = False
-			elif command.lower() == "os":
+			elif command == "os":
 				print(system)
 
-			elif command.lower().startswith("view "):
+			elif command.startswith("view "):
 				viewed = command[5:].strip()
 
 				viewer = subprocess.run(
@@ -243,7 +243,7 @@ while True:
 				if viewer.returncode != 0:
 					print(colored("File not found: Are you in the correct directory? Or is the file nonexistent?", "red"))
 					success = False
-			elif command.lower().startswith("cat "):
+			elif command.startswith("cat "):
 				file = command[4:].strip()
 
 				try:
@@ -251,10 +251,10 @@ while True:
 				except FileNotFoundError:
 					print(colored(f"File {file} not found", "red"))
 					success = False
-			elif command.lower().startswith("echo "):
+			elif command.startswith("echo "):
 				echoed = command[5:].strip()
 				print(expand_vars(echoed))
-			elif command.lower() in ["ls", "dir"]:
+			elif command in ["ls", "dir"]:
 				path = "."
 				try:
 					for entry in os.listdir(path):
@@ -282,30 +282,30 @@ while True:
 				subprocess.run(
 					[config["shell"], config["arg"], "pip install --upgrade pygments "], stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr
 				)
-			elif command.lower().endswith(".pysh") or command.lower().endswith(".py") and not command.lower().startswith("python"):
+			elif command.endswith(".pysh") or command.endswith(".py") and not command.startswith("python"):
 				try:
 					exec(Path(command).read_text())
 				except FileNotFoundError:
 					print(colored(f"File {command} not found", "red"))
 					success = False
 
-			elif command.lower().startswith("md "):
+			elif command.startswith("md "):
 				makedir = command[3:].strip().strip("'\"")
 				try:
 					Path(makedir).mkdir(exist_ok=True)
 				except PermissionError:
 					print(f"You can't make a directory in {Path.cwd()}")
 					success = False
-			elif command.lower().startswith("mkdir "):
+			elif command.startswith("mkdir "):
 				makedir = command[6:].strip().strip("'\"")
 				try:
 					Path(makedir).mkdir(exist_ok=True)
 				except PermissionError:
 					print(f"You can't make a directory in {Path.cwd()}")
 					success = False
-			elif command.lower() == "time":
+			elif command == "time":
 				print(time.strftime("%I:%M %p"))
-			elif command.lower() in ["cls", "clear"]:
+			elif command in ["cls", "clear"]:
 				subprocess.run("cls" if platform == "nt" else "clear", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True)
 
 			else:
