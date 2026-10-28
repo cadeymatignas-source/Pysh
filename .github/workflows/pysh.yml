@@ -29,11 +29,11 @@ jobs:
 
       - name: Build pysh
         run: |
-          pyinstaller --onefile pysh.py
+          pyinstaller pysh.spec
       - name: Build updater
         run: |
           cd update
-          pyinstaller --onefile updater.py --name Update
+          pyinstaller updater.spec --name pyshupdate
 
       - uses: actions/upload-artifact@v4
         with:
