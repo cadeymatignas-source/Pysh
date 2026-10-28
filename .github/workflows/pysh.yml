@@ -29,7 +29,7 @@ jobs:
 
       - name: Build pysh
         run: |
-          pyinstaller --onefile Pysh.py --name Pysh
+          pyinstaller --onefile pysh.py
       - name: Build updater
         run: |
           cd update
