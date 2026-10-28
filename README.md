@@ -19,11 +19,12 @@ Pythoner is another related project. It is a custom Python REPL designed to comb
 It was extracted from pysh.<br>
 [More details here](https://pypi.org/project/Pythoner/)
 
-## Installization
+## Installation
+
 [To install Pysh, click this link and find your OS release](https://github.com/cadeymatignas-source/pysh/releases/latest)
-Alternatively, you can run the `Update` CLI included in the zip file.
+Alternatively, you can run the `pyshupdate` CLI included in the zip file.
 ```bash
-Update
+pyshupdate
 ```
 For Pythoner, just run this:
 ```bash
