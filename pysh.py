@@ -157,38 +157,28 @@ while True:
 					pyb = command[6:].strip()
 					if config["use_uv-publish"]:
 						pybb = subprocess.run(
-							[
-								config["shell"],
-								config["arg"],
-								f"uv build && uv-publish && uv pip install --upgrade --system {pyb}",
-							],
+							f"uv build && uv-publish && uv pip install --upgrade --system {pyb}",
 							stdin=sys.stdin,
 							stdout=sys.stdout,
 							stderr=sys.stderr,
-							text=True,
+							shell=True,
 						)
 					else:
 						pybb = subprocess.run(
-							[
-								config["shell"],
-								config["arg"],
-								f"uv build && uv publish && uv pip install --upgrade --system {pyb}",
-							],
+							f"uv build && uv publish && uv pip install --upgrade --system {pyb}",
 							stdin=sys.stdin,
 							stdout=sys.stdout,
 							stderr=sys.stderr,
+							shell=True,
 						)
 				else:
 					pyb = command[6:].strip()
 					pybb = subprocess.run(
-						[
-							config["shell"],
-							config["arg"],
-							f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
-						],
+						f"python -m build && python -m twine check dist/* && python -m twine upload dist/* && pip install --upgrade {pyb}",
 						stdin=sys.stdin,
 						stdout=sys.stdout,
 						stderr=sys.stderr,
+						shell=True,
 					)
 				if pybb.returncode != 0:
 					if config["use_uv"]:
@@ -196,10 +186,7 @@ while True:
 						match downl.lower():
 							case "y":
 								subprocess.run(
-									[config["shell"], config["arg"], "pipx install uv && uv tool install uv-publish"],
-									stdin=sys.stdin,
-									stdout=sys.stdout,
-									stderr=sys.stderr,
+									"pipx install uv && uv tool install uv-publish", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True
 								)
 							case "n":
 								print("Ok")
@@ -208,20 +195,13 @@ while True:
 						downl = input("Oh no! Something failed! Download build and twine? (y/N)")
 						match downl.lower():
 							case "y":
-								subprocess.run(
-									[config["shell"], config["arg"], "pipx install build twine"],
-									stdin=sys.stdin,
-									stdout=sys.stdout,
-									stderr=sys.stderr,
-								)
+								subprocess.run("pipx install build twine", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True)
 							case "n":
 								print("Ok")
 					success = False
 			elif command.startswith("pack get "):
 				getd = command[9:].strip()
-				subprocess.run(
-					f"{config['package_manager']} {getd}", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True
-				)
+				subprocess.run(f"{config['package_manager']} {getd}", stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True)
 			elif command == "whoami":
 				print(f"You are {config['User']}")
 
