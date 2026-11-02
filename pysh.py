@@ -62,7 +62,6 @@ if not config_py_path.exists():
 with config_path.open("rb") as f:
 	config = tomllib.load(f)
 
-exec(config_py_path.read_text())
 
 variables = {"USER": config["User"], "SHELL": sys.executable, "HOME": Path.home(), "USERPROFILE": Path.home()}
 
@@ -75,6 +74,7 @@ def expand_vars(text):
 
 print(colored(f"Welcome to the python terminal, {config['User']}!", "blue"))
 change = False
+exec(config_py_path.read_text())
 while True:
 	try:
 		if not change:
