@@ -31,6 +31,8 @@ if not config_path.exists():
 		use_uv_publish = False
 	autocdyes = input("Do you want to enable AUTOCD? (y/N): ")
 	autocdyes = autocdyes.lower() == "y"
+	whichentrymessage = input("Do you want to enable the entry message? (on/off/legacy): ")
+	whichentrymessage = whichentrymessage.lower()
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -42,6 +44,10 @@ if not config_path.exists():
 	use_uv = {str(use_uv).lower()}
 	use_uv-publish = {str(use_uv_publish).lower()}
 	AUTOCD = {str(autocdyes).lower()}
+	entry_message = "{whichentrymessage}"
+	[danger zone]
+	dont_start = false
+	dont_read_pyshrc = false
 	"""
 		)
 
@@ -53,6 +59,10 @@ if not config_path.exists():
 	use_uv = {str(use_uv).lower()}
 	use_uv-publish = {str(use_uv_publish).lower()}
 	AUTOCD = {str(autocdyes).lower()}
+	entry_message = "{whichentrymessage}"
+	[danger zone]
+	dont_start = false
+	dont_read_pyshrc = false
 	"""
 		)
 	elif system == "darwin":
@@ -63,6 +73,10 @@ if not config_path.exists():
 	use_uv = {str(use_uv).lower()}
 	use_uv-publish = {str(use_uv_publish).lower()}
 	AUTOCD = {str(autocdyes).lower()}
+	entry_message = "{whichentrymessage}"
+	[danger zone]
+	dont_start = false
+	dont_read_pyshrc = false
 	"""
 		)
 
@@ -86,12 +100,16 @@ def expand_vars(text):
 	return text
 
 
+if config["dont_start"]:
+	sys.exit()
+
 if config["entry_message"] == "legacy":
 	print(colored(f"Welcome to the python terminal, {config['User']}!", config["prompt_color"]))
 elif config["entry_message"] == "on":
 	print(colored(f"Welcome to Pysh, {config['User']}!", config["prompt_color"]))
 change = False
-exec(config_py_path.read_text())
+if not config["dont_read_pyshrc"]:
+	exec(config_py_path.read_text())
 while True:
 	try:
 		if not change:
