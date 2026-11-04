@@ -45,7 +45,7 @@ if not config_path.exists():
 	use_uv-publish = {str(use_uv_publish).lower()}
 	AUTOCD = {str(autocdyes).lower()}
 	entry_message = "{whichentrymessage}"
-	[danger zone]
+	[danger_zone]
 	dont_start = false
 	dont_read_pyshrc = false
 	"""
@@ -60,7 +60,7 @@ if not config_path.exists():
 	use_uv-publish = {str(use_uv_publish).lower()}
 	AUTOCD = {str(autocdyes).lower()}
 	entry_message = "{whichentrymessage}"
-	[danger zone]
+	[danger_zone]
 	dont_start = false
 	dont_read_pyshrc = false
 	"""
@@ -74,7 +74,7 @@ if not config_path.exists():
 	use_uv-publish = {str(use_uv_publish).lower()}
 	AUTOCD = {str(autocdyes).lower()}
 	entry_message = "{whichentrymessage}"
-	[danger zone]
+	[danger_zone]
 	dont_start = false
 	dont_read_pyshrc = false
 	"""
@@ -100,7 +100,7 @@ def expand_vars(text):
 	return text
 
 
-if config["dont_start"]:
+if config["danger_zone"]["dont_start"]:
 	sys.exit()
 
 if config["entry_message"] == "legacy":
@@ -108,7 +108,7 @@ if config["entry_message"] == "legacy":
 elif config["entry_message"] == "on":
 	print(colored(f"Welcome to Pysh, {config['User']}!", config["prompt_color"]))
 change = False
-if not config["dont_read_pyshrc"]:
+if not config["danger_zone"]["dont_read_pyshrc"]:
 	exec(config_py_path.read_text())
 while True:
 	try:
