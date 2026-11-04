@@ -16,39 +16,53 @@ config_py_path = Path.home() / ".pyshrc"
 
 
 if not config_path.exists():
-	print("Hello new user. Generating .pysh.toml")
+	print("Hello new user!")
+	if system == "linux":
+		linux_pack = input("What package manager is compatible with your distro? Type here: ")
+
+	watprompt_color = input("What color do you want your prompt to be? (red, green, yellow, blue, magenta, cyan, white): ")
+	use_uv = input("Do you use uv? (y/N): ")
+	if use_uv.lower() == "y":
+		use_uv = True
+		use_uv_publish = input("Do you use uv-publish? (y/N): ")
+		use_uv_publish = use_uv_publish.lower() == "y"
+	else:
+		use_uv = False
+		use_uv_publish = False
+	autocdyes = input("Do you want to enable AUTOCD? (y/N): ")
+	autocdyes = autocdyes.lower() == "y"
 
 	config_path.parent.mkdir(parents=True, exist_ok=True)
 
 	if system == "win32":
 		config_path.write_text(
-			"""package_manager = "winget"
+			f"""package_manager = "winget"
 	User = "root"
-	prompt_color = "magenta"
-	use_uv = false
-	use_uv-publish = false
-	AUTOCD = true
+	prompt_color = "{watprompt_color}"
+	use_uv = {str(use_uv).lower()}
+	use_uv-publish = {str(use_uv_publish).lower()}
+	AUTOCD = {str(autocdyes).lower()}
 	"""
 		)
 
 	elif system == "linux":
 		config_path.write_text(
-			"""package_manager = "sudo apt"
+			f"""package_manager = "{linux_pack}"
 	User = "root"
-	prompt_color = "magenta"
-	use_uv = false
-	use_uv-publish = false
-	AUTOCD = true
+	prompt_color = "{watprompt_color}"
+	use_uv = {str(use_uv).lower()}
+	use_uv-publish = {str(use_uv_publish).lower()}
+	AUTOCD = {str(autocdyes).lower()}
 	"""
 		)
 	elif system == "darwin":
 		config_path.write_text(
-			"""package_manager = "brew"
+			f"""package_manager = "brew"
 	User = "root"
-	prompt_color = "magenta"
-	use_uv = false
-	use_uv-publish = false
-	AUTOCD = true
+	prompt_color = "{watprompt_color}"
+	use_uv = {str(use_uv).lower()}
+	use_uv-publish = {str(use_uv_publish).lower()}
+	AUTOCD = {str(autocdyes).lower()}
 	"""
 		)
 
