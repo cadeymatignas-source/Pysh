@@ -10,7 +10,7 @@ Reasons to use Pysh:
 2. It is cross-platform;
 3. It has native uv support;
 4. Self-updating;
-5. It can run _.py and_ .pysh files natively;
+5. It can run `.py` and `.pysh` files natively;
 6. And it is customizable.
 
 ## Pythoner
