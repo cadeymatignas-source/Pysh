@@ -272,14 +272,14 @@ while True:
 			elif command.startswith("md "):
 				makedir = command[3:].strip().strip("'\"")
 				try:
-					Path(makedir).mkdir(exist_ok=True)
+					Path(makedir).mkdir(exist_ok=True, parents=True)
 				except PermissionError:
 					print(f"You can't make a directory in {Path.cwd()}")
 					success = False
 			elif command.startswith("mkdir "):
 				makedir = command[6:].strip().strip("'\"")
 				try:
-					Path(makedir).mkdir(exist_ok=True)
+					Path(makedir).mkdir(exist_ok=True, parents=True)
 				except PermissionError:
 					print(f"You can't make a directory in {Path.cwd()}")
 					success = False
