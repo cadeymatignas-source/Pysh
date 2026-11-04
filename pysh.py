@@ -72,7 +72,10 @@ def expand_vars(text):
 	return text
 
 
-print(colored(f"Welcome to the python terminal, {config['User']}!", "blue"))
+if config["entry_message"] == "legacy":
+	print(colored(f"Welcome to the python terminal, {config['User']}!", config["prompt_color"]))
+elif config["entry_message"] == "on":
+	print(colored(f"Welcome to Pysh, {config['User']}!", config["prompt_color"]))
 change = False
 exec(config_py_path.read_text())
 while True:
