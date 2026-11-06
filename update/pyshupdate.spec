@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['updater.py'],
+    ['pyshupdate.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='updater',
+    name='pyshupdate',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
