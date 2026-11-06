@@ -91,7 +91,7 @@ with config_path.open("rb") as f:
 	config = tomllib.load(f)
 
 
-variables = {"USER": config["User"], "SHELL": sys.executable, "HOME": Path.home(), "USERPROFILE": Path.home()}
+variables = {"USERPROFILE": Path.home(), "USER": config["User"], "SHELL": sys.executable, "HOME": Path.home()}
 
 
 def expand_vars(text):
