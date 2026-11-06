@@ -39,45 +39,45 @@ if not config_path.exists():
 	if system == "win32":
 		config_path.write_text(
 			f"""package_manager = "winget"
-	User = "root"
-	prompt_color = "{watprompt_color}"
-	use_uv = {str(use_uv).lower()}
-	use_uv-publish = {str(use_uv_publish).lower()}
-	AUTOCD = {str(autocdyes).lower()}
-	entry_message = "{whichentrymessage}"
-	[danger_zone]
-	dont_start = false
-	dont_read_pyshrc = false
-	"""
+User = "root"
+prompt_color = "{watprompt_color}"
+use_uv = {str(use_uv).lower()}
+use_uv-publish = {str(use_uv_publish).lower()}
+AUTOCD = {str(autocdyes).lower()}
+entry_message = "{whichentrymessage}"
+[danger_zone]
+dont_start = false
+dont_read_pyshrc = false
+"""
 		)
 
 	elif system == "linux":
 		config_path.write_text(
 			f"""package_manager = "{linux_pack}"
-	User = "root"
-	prompt_color = "{watprompt_color}"
-	use_uv = {str(use_uv).lower()}
-	use_uv-publish = {str(use_uv_publish).lower()}
-	AUTOCD = {str(autocdyes).lower()}
-	entry_message = "{whichentrymessage}"
-	[danger_zone]
-	dont_start = false
-	dont_read_pyshrc = false
-	"""
+User = "root"
+prompt_color = "{watprompt_color}"
+use_uv = {str(use_uv).lower()}
+use_uv-publish = {str(use_uv_publish).lower()}
+AUTOCD = {str(autocdyes).lower()}
+entry_message = "{whichentrymessage}"
+[danger_zone]
+dont_start = false
+dont_read_pyshrc = false
+"""
 		)
 	elif system == "darwin":
 		config_path.write_text(
 			f"""package_manager = "brew"
-	User = "root"
-	prompt_color = "{watprompt_color}"
-	use_uv = {str(use_uv).lower()}
-	use_uv-publish = {str(use_uv_publish).lower()}
-	AUTOCD = {str(autocdyes).lower()}
-	entry_message = "{whichentrymessage}"
-	[danger_zone]
-	dont_start = false
-	dont_read_pyshrc = false
-	"""
+User = "root"
+prompt_color = "{watprompt_color}"
+use_uv = {str(use_uv).lower()}
+use_uv-publish = {str(use_uv_publish).lower()}
+AUTOCD = {str(autocdyes).lower()}
+entry_message = "{whichentrymessage}"
+[danger_zone]
+dont_start = false
+dont_read_pyshrc = false
+"""
 		)
 
 if not config_py_path.exists():
