@@ -2,7 +2,7 @@
 
 ## This is a shell coded entirely in Python
 
-![alt text](logo.ico) Pysh is a Python-based shell tailored for Python development
+![alt text](logo.png) Pysh is a Python-based shell tailored for Python development
 
 ![alt text](image.png)
 
