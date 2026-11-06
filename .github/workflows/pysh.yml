@@ -25,9 +25,18 @@ jobs:
         run: |
           pip install --upgrade pyinstaller termcolor pygments
 
-      - name: Build pysh
+      - name: Build pysh windows
+        if: runner.os == 'Windows'
         run: |
           pyinstaller pysh.spec
+      - name: Build pysh macos
+        if: runner.os == 'macOS'
+        run: |
+          pyinstaller --onefile --icon=logo.png pysh.py
+      - name: Build pysh linux
+        if: runner.os == 'Linux'
+        run: |
+          pyinstaller --onefile --icon=logo.png pysh.py
       - name: Build updater
         run: |
           cd update
